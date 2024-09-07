@@ -22,7 +22,7 @@ public class ClientGUI extends JFrame {
     private final JButton buttonSend = new JButton("Send");
     private final JButton buttonConnect = new JButton("Connect");
     private JTextArea log = new JTextArea();
-    boolean connectionIsDone;
+    boolean connectionIsDone = false;
 
     ServerWindow serverWindow;
     public ClientGUI(ServerWindow serverWindow) {
@@ -40,13 +40,11 @@ public class ClientGUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if (getConnectionIsDone()) {
                     serverWindow.sendMessage(textLogin.getText() + ": " + textMessage.getText() + "\n");
-//                    log.append(serverWindow.getLogDialog());
-//                    log.append(textLogin.getText() + ": " + textMessage.getText() + "\n");
                     log.setText(serverWindow.getLogDialog());
                     textMessage.setText("");
                 } else {
                     setConnectionIsDone();
-                    log.append("Server is not working or your connection is failed. Please try again \n");
+                    log.append("\n Server is not working or your connection is failed. Please try again \n");
                 }
             }
         });
@@ -54,9 +52,13 @@ public class ClientGUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (serverWindow.getIsServerWorking()) {
-                    setConnectionIsDone();
-                    log.append("Your connection is success \n");
+                    if (getConnectionIsDone()) {
+                        setConnectionIsDone();
+                        log.append("Your connection is success \n");
+                        log.append(serverWindow.getLogDialog());
+                    }
                 } else {
+                    log.setText("");
                     setConnectionIsCancel();
                     log.append("Your connection is failed \n");
                     return;
